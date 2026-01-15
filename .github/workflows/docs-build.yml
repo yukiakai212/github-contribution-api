@@ -1,0 +1,72 @@
+name: Deploy versioned docs
+
+on:
+  push:
+    branches:
+      - main
+      - dev
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build docs
+        run: npm run docs  # output  ./docs
+
+      - name: Determine version folders
+        id: version
+        run: |
+          TAG=$(git describe --tags --exact-match 2>/dev/null || true)
+          if [ -z "$TAG" ]; then
+            echo "is_tag=false" >> $GITHUB_OUTPUT
+            echo "tag_folder=" >> $GITHUB_OUTPUT
+          else
+            echo "is_tag=true" >> $GITHUB_OUTPUT
+            echo "tag_folder=$TAG" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Clone docs branch
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git clone --branch docs --single-branch https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }} docs-branch
+
+      - name: Copy docs to latest folder
+        run: |
+          rm -rf docs-branch/latest
+          mkdir -p docs-branch/latest
+          cp -r docs/* docs-branch/latest/
+
+      - name: Copy docs to tag folder (if tag exists)
+        if: steps.version.outputs.is_tag == 'true'
+        run: |
+          TAG_FOLDER=${{ steps.version.outputs.tag_folder }}
+          rm -rf docs-branch/$TAG_FOLDER
+          mkdir -p docs-branch/$TAG_FOLDER
+          cp -r docs/* docs-branch/$TAG_FOLDER/
+
+      - name: Commit and push changes
+        run: |
+          cd docs-branch
+          git add .
+          git commit -m "Update docs for latest${{ steps.version.outputs.is_tag == 'true' && format(' and %s', steps.version.outputs.tag_folder) || '' }}" || echo "No changes to commit"
+          git push origin docs
