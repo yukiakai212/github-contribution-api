@@ -69,7 +69,7 @@
     "@types/node": "^24.0.10",
     "@vitest/coverage-v8": "^4.0.15",
     "dotenv": "^17.0.1",
-    "eslint": "^9.30.0",
+    "eslint": "^9.39.2",
     "husky": "^9.1.7",
     "is-ci": "^4.1.0",
     "prettier": "^3.6.2",
