@@ -1,4 +1,4 @@
-# GitHub Contribution Graph API (Node.js)
+# GitHub Contribution API (Node.js)
 
 [![NPM Version][npm-version-image]][npm-url]
 [![NPM Downloads][npm-downloads-image]][npm-downloads-url]
@@ -19,7 +19,7 @@ Fetch and parse GitHub contribution graphs directly in Node.js, without running 
 ## Installation
 
 ```bash
-npm install github-contribution-graph-api
+npm install github-contribution-api
 ```
 
 ---
@@ -29,9 +29,9 @@ npm install github-contribution-graph-api
 ### Basic
 
 ```ts
-import { getContributionGraph } from 'github-contribution-graph-api'
+import { getContribution } from 'github-contribution-api'
 
-const graph = await getContributionGraph('yukiakai')
+const graph = await getContribution('yukiakai')
 ```
 
 Defaults:
@@ -45,19 +45,19 @@ Defaults:
 ### Specify year(s)
 
 ```ts
-await getContributionGraph('yukiakai', {
+await getContribution('yukiakai', {
   year: 2024,
 })
 ```
 
 ```ts
-await getContributionGraph('yukiakai', {
+await getContribution('yukiakai', {
   year: [2022, 2023, 2024],
 })
 ```
 
 ```ts
-await getContributionGraph('yukiakai', {
+await getContribution('yukiakai', {
   year: 'all',
 })
 ```
@@ -69,7 +69,7 @@ await getContributionGraph('yukiakai', {
 #### Array (default)
 
 ```ts
-const graph = await getContributionGraph('yukiakai', {
+const graph = await getContribution('yukiakai', {
   format: 'array',
 })
 ```
@@ -93,7 +93,7 @@ const graph = await getContributionGraph('yukiakai', {
 ####  Nested
 
 ```ts
-const graph = await getContributionGraph('yukiakai', {
+const graph = await getContribution('yukiakai', {
   format: 'nested',
 })
 ```
@@ -122,19 +122,19 @@ Nested structure:
 
 ## API
 
-### `getContributionGraph(username, options?)`
+### `getContribution(username, options?)`
 
 ```ts
-getContributionGraph(
+getContribution(
   username: string,
-  options?: GetContributionGraphOptions
-): Promise<ContributionGraph | NestedContributionGraph>
+  options?: getContributionOptions
+): Promise<ContributionResponse | NestedContributionResponse>
 ```
 
 #### Options
 
 ```ts
-interface GetContributionGraphOptions {
+interface getContributionOptions {
   year?: 'all' | 'last' | number | number[]
   format?: 'array' | 'nested'
   cache?: boolean
@@ -145,19 +145,13 @@ interface GetContributionGraphOptions {
 
 ## Caching
 
-* Built-in **LRU cache**
-* Keyed by:
-
-  ```
-  username + year + format
-  ```
 * Cache enabled by default
 * TTL: 1 hour
 
 Disable cache if needed:
 
 ```ts
-await getContributionGraph('yukiakai', {
+await getContribution('yukiakai', {
   cache: false,
 })
 ```
@@ -187,13 +181,13 @@ MIT © [Yuki Akai](https://github.com/yukiakai212)
 
 ---
 
-[npm-downloads-image]: https://badgen.net/npm/dm/github-contribution-graph-api
-[npm-downloads-url]: https://www.npmjs.com/package/github-contribution-graph-api
-[npm-url]: https://www.npmjs.com/package/github-contribution-graph-api
-[npm-version-image]: https://badgen.net/npm/v/github-contribution-graph-api
-[github-build-url]: https://github.com/yukiakai212/github-contribution-graph-api/actions/workflows/build.yml/badge.svg
-[github-url]: https://github.com/yukiakai212/github-contribution-graph-api/
-[codecov-image]: https://codecov.io/gh/yukiakai212/github-contribution-graph-api/branch/main/graph/badge.svg
-[codecov-url]: https://codecov.io/gh/yukiakai212/github-contribution-graph-api
-[changelog-url]: https://github.com/yukiakai212/github-contribution-graph-api/blob/main/CHANGELOG.md
-[api-docs-url]: https://yukiakai212.github.io/github-contribution-graph-api/
+[npm-downloads-image]: https://badgen.net/npm/dm/github-contribution-api
+[npm-downloads-url]: https://www.npmjs.com/package/github-contribution-api
+[npm-url]: https://www.npmjs.com/package/github-contribution-api
+[npm-version-image]: https://badgen.net/npm/v/github-contribution-api
+[github-build-url]: https://github.com/yukiakai212/github-contribution-api/actions/workflows/build.yml/badge.svg
+[github-url]: https://github.com/yukiakai212/github-contribution-api/
+[codecov-image]: https://codecov.io/gh/yukiakai212/github-contribution-api/branch/main/graph/badge.svg
+[codecov-url]: https://codecov.io/gh/yukiakai212/github-contribution-api
+[changelog-url]: https://github.com/yukiakai212/github-contribution-api/blob/main/CHANGELOG.md
+[api-docs-url]: https://yukiakai212.github.io/github-contribution-api/

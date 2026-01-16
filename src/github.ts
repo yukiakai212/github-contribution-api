@@ -2,30 +2,36 @@ import { fromURL, CheerioRequestOptions } from 'cheerio';
 
 import { Element, isText } from 'domhandler';
 import {
-  GetContributionGraphOptions,
-  ContributionGraph,
-  NestedContributionGraph,
+  GetContributionOptions,
+  ContributionResponse,
+  NestedContributionResponse,
   Contribution,
   Level,
+  Format,
 } from './types.js';
 
 export const scrapeContributions = async (
   username: string,
-  opts: GetContributionGraphOptions,
-): Promise<ContributionGraph | NestedContributionGraph> => {
+  opts: GetContributionOptions,
+): Promise<ContributionResponse | NestedContributionResponse> => {
   let requests = [];
 
   if (opts.year === 'last') {
     requests.push(scrapeYear(username, 'lastYear', opts.format));
   } else {
-    const year = Number.isInteger(opts.year) ? [opts.year] : opts.year;
+    const year: 'all' | number[] =
+      opts.year === undefined || opts.year === 'all'
+        ? 'all'
+        : Array.isArray(opts.year)
+          ? opts.year
+          : [opts.year];
     const yearLinks = await scrapeYearLinks(username, year);
     requests = yearLinks.map((link) => scrapeYear(username, link.year, opts.format));
   }
 
   return Promise.all(requests).then((contributions) => {
     if (opts.format === 'nested') {
-      return (contributions as Array<NestedContributionGraph>).reduce(
+      return (contributions as Array<NestedContributionResponse>).reduce(
         (resp, curr) => ({
           total: { ...resp.total, ...curr.total },
           contributions: { ...resp.contributions, ...curr.contributions },
@@ -37,7 +43,7 @@ export const scrapeContributions = async (
       );
     }
 
-    return (contributions as Array<ContributionGraph>).reduce(
+    return (contributions as Array<ContributionResponse>).reduce(
       (resp, curr) => {
         return {
           total: { ...resp.total, ...curr.total },
@@ -55,8 +61,8 @@ export const scrapeContributions = async (
 const scrapeYear = async (
   username: string,
   year: number | 'lastYear',
-  format?: 'nested',
-): Promise<ContributionGraph | NestedContributionGraph> => {
+  format: Format = 'nested',
+): Promise<ContributionResponse | NestedContributionResponse> => {
   const url =
     year === 'lastYear'
       ? `https://github.com/users/${username}/contributions`
@@ -95,7 +101,7 @@ const scrapeYear = async (
   };
 
   if (format === 'nested') {
-    return sortedDays.reduce<NestedContributionGraph>((data, day) => {
+    return sortedDays.reduce<NestedContributionResponse>((data, day) => {
       const { date, contribution } = parseDay(day, tooltipsByDayId);
       const [y, m, d] = date;
 

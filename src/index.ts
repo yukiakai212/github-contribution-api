@@ -1,12 +1,12 @@
 import { LRUCache } from 'lru-cache';
 import {
-  GetContributionGraphOptions,
-  ContributionGraph,
-  NestedContributionGraph,
+  GetContributionOptions,
+  ContributionResponse,
+  NestedContributionResponse,
 } from './types.js';
 import { scrapeContributions } from './github.js';
 
-const cache = new LRUCache<string, ContributionGraph | NestedContributionGraph>({
+const cache = new LRUCache<string, ContributionResponse | NestedContributionResponse>({
   max: 500,
   ttl: 1000 * 60 * 60,
 });
@@ -15,7 +15,7 @@ const DEFAULT_OPTIONS = {
   year: 'all' as const,
   format: 'array' as const,
 };
-export function buildCacheKey(username: string, opts?: GetContributionGraphOptions): string {
+export function buildCacheKey(username: string, opts?: GetContributionOptions): string {
   const year = opts?.year
     ? Array.isArray(opts?.year)
       ? opts.year.sort().join(',')
@@ -24,7 +24,7 @@ export function buildCacheKey(username: string, opts?: GetContributionGraphOptio
   const format = opts?.format ?? '';
   return `${username.toLowerCase()}:${year}:${format}`;
 }
-function normalizeOptions(opts?: GetContributionGraphOptions) {
+function normalizeOptions(opts?: GetContributionOptions) {
   return {
     cache: opts?.cache ?? DEFAULT_OPTIONS.cache,
     format: opts?.format ?? DEFAULT_OPTIONS.format,
@@ -33,8 +33,8 @@ function normalizeOptions(opts?: GetContributionGraphOptions) {
 }
 export async function getContributionGraph(
   username: string,
-  opts?: GetContributionGraphOptions,
-): Promise<ContributionGraph | NestedContributionGraph> {
+  opts?: GetContributionOptions,
+): Promise<ContributionResponse | NestedContributionResponse> {
   if (!username) {
     throw new TypeError('username is required');
   }
@@ -55,3 +55,4 @@ export async function getContributionGraph(
 
   return result;
 }
+export * from './types.js';

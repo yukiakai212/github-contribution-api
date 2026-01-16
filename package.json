@@ -1,7 +1,7 @@
 {
-  "name": "github-contribution-graph-api",
+  "name": "github-contribution-api",
   "version": "1.0.0",
-  "description": "Fetch and parse GitHub contribution graphs directly in Node.js, without running a separate HTTP service.",
+  "description": "Fetch and parse GitHub contribution directly in Node.js, without running a separate HTTP service.",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -44,7 +44,7 @@
     "analytics"
   ],
   "author": "Yuki_akai",
-  "homepage": "https://github.com/yukiakai212/github-contribution-graph-api",
+  "homepage": "https://github.com/yukiakai212/github-contribution-api",
   "funding": "https://github.com/sponsors/yukiakai212",
   "engines": {
     "node": ">= 16"
@@ -57,10 +57,10 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/yukiakai212/github-contribution-graph-api.git"
+    "url": "git+https://github.com/yukiakai212/github-contribution-api.git"
   },
   "bugs": {
-    "url": "https://github.com/yukiakai212/github-contribution-graph-api/issues"
+    "url": "https://github.com/yukiakai212/github-contribution-api/issues"
   },
   "license": "MIT",
   "devDependencies": {
@@ -81,7 +81,7 @@
     "vitest": "^4.0.15"
   },
   "dependencies": {
-    "cheerio": "^1.1.0",
+    "cheerio": "^1.0.0",
     "domhandler": "^5.0.3",
     "lru-cache": "^11.2.4"
   }

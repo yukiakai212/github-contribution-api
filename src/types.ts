@@ -6,7 +6,7 @@ export type Contribution = {
   level: Level;
 };
 
-export type ContributionGraph = {
+export type ContributionResponse = {
   total: {
     [year: number]: number;
     [year: string]: number; // 'lastYear;
@@ -14,7 +14,7 @@ export type ContributionGraph = {
   contributions: Array<Contribution>;
 };
 
-export type NestedContributionGraph = {
+export type NestedContributionResponse = {
   total: {
     [year: number]: number;
     [year: string]: number; // 'lastYear;
@@ -23,7 +23,7 @@ export type NestedContributionGraph = {
 };
 export type Format = 'array' | 'nested';
 
-export interface GetContributionGraphOptions {
+export interface GetContributionOptions {
   year?: 'all' | 'last' | number | number[];
   format?: Format;
   cache?: boolean;
