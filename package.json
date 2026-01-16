@@ -1,6 +1,6 @@
 {
   "name": "github-contribution-api",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Fetch and parse GitHub contribution directly in Node.js, without running a separate HTTP service.",
   "type": "module",
   "main": "./dist/index.js",
