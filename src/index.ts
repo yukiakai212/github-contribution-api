@@ -31,7 +31,7 @@ function normalizeOptions(opts?: GetContributionOptions) {
     year: opts?.year ?? DEFAULT_OPTIONS.year,
   };
 }
-export async function getContributionGraph(
+export async function getContribution(
   username: string,
   opts?: GetContributionOptions,
 ): Promise<ContributionResponse | NestedContributionResponse> {
@@ -55,4 +55,5 @@ export async function getContributionGraph(
 
   return result;
 }
+
 export * from './types.js';
